@@ -1,0 +1,11 @@
+Device Name,Device IPv4,Device IPv6,Mac Address,Site Name,Event,Description,Severity,Alarm Time,Acked Time,Clear Time,Ssid Name
+HFCL-cb:00:33,192.168.171.7,2405:200:902:600:206:aeff:fecb:33,00:06:ae:cb:00:33,BLR-WIFILAB,Client Deauthenticated from AP,"Client ""04:56:E5:5B:C7:F5"" deauthenticated from AP ""HFCL-cb:00:33""",Major,07-05-2025 16:48,,,wifilab
+HFCL-cb:00:33,192.168.171.7,2405:200:902:600:206:aeff:fecb:33,00:06:ae:cb:00:33,BLR-WIFILAB,Client Deauthenticated from AP,"Client ""04:56:E5:59:32:9C"" deauthenticated from AP ""HFCL-cb:00:33""",Major,07-05-2025 16:00,,,wifilab
+HFCL-cb:00:33,192.168.171.7,2405:200:902:600:206:aeff:fecb:33,00:06:ae:cb:00:33,BLR-WIFILAB, Client Associated,"Client ""04:56:E5:59:32:9C"" associated with AP ""HFCL-cb:00:33""",Major,07-05-2025 16:01,,,wifilab
+HFCL-cb:00:33,192.168.171.7,2405:200:902:600:206:aeff:fecb:33,00:06:ae:cb:00:33,BLR-WIFILAB,Client Authenticated with AP,"Client ""04:56:E5:59:32:9C"" authenticated with AP ""HFCL-cb:00:33""",Major,07-05-2025 16:01,,,wifilab
+HFCL-cb:00:33,192.168.171.7,2405:200:902:600:206:aeff:fecb:33,00:06:ae:cb:00:33,BLR-WIFILAB,Client Deauthenticated from AP,"Client ""04:56:E5:59:32:9C"" deauthenticated from AP ""HFCL-cb:00:33""",Major,07-05-2025 16:04,,,wifilab
+HFCL-cb:00:33,192.168.171.7,2405:200:902:600:206:aeff:fecb:33,00:06:ae:cb:00:33,BLR-WIFILAB,Client Authenticated with AP,"Client ""04:56:E5:59:32:9C"" authenticated with AP ""HFCL-cb:00:33""",Major,07-05-2025 16:06,,,wifilab
+HFCL-cb:00:33,192.168.171.7,2405:200:902:600:206:aeff:fecb:33,00:06:ae:cb:00:33,BLR-WIFILAB, Client Associated,"Client ""04:56:E5:59:32:9C"" associated with AP ""HFCL-cb:00:33""",Major,07-05-2025 16:06,,,wifilab
+HFCL-cb:00:33,192.168.171.7,2405:200:902:600:206:aeff:fecb:33,00:06:ae:cb:00:33,BLR-WIFILAB,Client Deauthenticated from AP,"Client ""04:56:E5:59:32:9C"" deauthenticated from AP ""HFCL-cb:00:33""",Major,07-05-2025 16:08,,,wifilab
+HFCL-cb:00:33,192.168.171.7,2405:200:902:600:206:aeff:fecb:33,00:06:ae:cb:00:33,BLR-WIFILAB, Client Associated,"Client ""C4:75:AB:BA:38:03"" associated with AP ""HFCL-cb:00:33""",Major,07-05-2025 16:22,,,wifilab
+HFCL-cb:00:33,192.168.171.7,2405:200:902:600:206:aeff:fecb:33,00:06:ae:cb:00:33,BLR-WIFILAB,Client Authenticated with AP,"Client ""C4:75:AB:BA:38:03"" authenticated with AP ""HFCL-cb:00:33""",Major,07-05-2025 16:22,,,wifilab

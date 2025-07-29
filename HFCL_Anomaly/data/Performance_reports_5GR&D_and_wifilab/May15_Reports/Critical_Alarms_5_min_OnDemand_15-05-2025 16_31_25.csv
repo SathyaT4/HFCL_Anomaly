@@ -1,0 +1,8 @@
+Device Name,Device IPv4,Device IPv6,Mac Address,Site Name,Event,Description,Severity,Alarm Time,Acked Time,Ssid Name
+Zone-D1,172.24.19.237,"",00:06:ae:60:65:89,5G_R&D, AP Offline,"AP ""Zone-D1"" is offline",Critical,18-11-2024 18:38,,
+Zone_B1,172.24.23.138,fd09:712b:32a2::206:aeff:fe60:f57,00:06:ae:60:0f:57,5G_R&D,2.4GHz Radio Status Disabled,"2.4GHz Radio Status changed to Disabled of device ""Zone_B1""",Critical,15-05-2025 08:09,,
+Zone-D2,172.24.22.103,fe80::206:aeff:fe60:57db,00:06:ae:60:57:db,5G_R&D,5GHz Radio Status Disabled,"5GHz Radio Status changed to Disabled of device ""Zone-D2""",Critical,15-05-2025 08:10,,
+"","","","",5G_R&D,Site 2.4GHz Radio Status Changed to Disabled,"Radio Status changed to Disabled of Site ""5G_R&D"" for radio ""2.4 Ghz""",Critical,11-04-2025 10:18,,
+Zone-A,172.24.22.36,"",00:06:ae:60:7b:b7,5G_R&D,2.4GHz Radio Status Disabled,"2.4GHz Radio Status changed to Disabled of device ""Zone-A""",Critical,15-05-2025 08:11,,
+Zone-D2,172.24.22.103,"",00:06:ae:60:57:db,5G_R&D,2.4GHz Radio Status Disabled,"2.4GHz Radio Status changed to Disabled of device ""Zone-D2""",Critical,15-05-2025 08:10,,
+ion12xi_h2,172.24.21.149,"",00:06:ae:84:f8:33,5G_R&D,2.4GHz Radio Status Disabled,"2.4GHz Radio Status changed to Disabled of device ""ion12xi_h2""",Critical,17-12-2024 11:54,,

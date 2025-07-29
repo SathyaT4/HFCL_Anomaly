@@ -1,0 +1,5 @@
+Device Name,Device IPv4,Device IPv6,Mac Address,Site Name,Event,Description,Severity,Alarm Time,Acked Time,Ssid Name
+"","","","",BLR-WIFILAB,SSID Client Isolation Disabled,"Client Isolation of SSID ""wifilab"" changed to Disabled",Critical,09-04-2025 10:03,,wifilab
+HFCL-63:00:23,192.168.170.63,"",00:06:ae:63:00:23,BLR-WIFILAB, AP Offline,"AP ""HFCL-63:00:23"" is offline",Critical,09-12-2024 17:46,,
+HFCL-63:00:23,192.168.170.63,"",00:06:ae:63:00:23,BLR-WIFILAB, Secondary NTP Server Offline,"Secondary NTP Server of device ""HFCL-63:00:23"" is Offline",Critical,07-12-2024 04:42,,
+HFCL3,192.168.171.55,"",00:06:ae:63:03:31,BLR-WIFILAB, AP Offline,"AP ""HFCL3"" is offline",Critical,27-01-2025 13:30,,

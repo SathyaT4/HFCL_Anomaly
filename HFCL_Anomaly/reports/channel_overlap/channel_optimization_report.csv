@@ -1,0 +1,2 @@
+AP Name,SSID,Channel,Interface,rule_based_overlap_detected,overlapping_channels,ml_anomaly_detected,anomaly_score,avg_snr,avg_rssi,client_count,recommendation
+HFCL-cb:00:33,wifilab,8,2.4GHz,False,,True,-0.052182184068716886,53.44444444444444,-41.55555555555556,8,"ML model detected anomalous channel performance for this configuration (AP, SSID, Channel, Interface). Investigate 'Avg_SNR' and 'Avg_RSSI' values which might indicate hidden interference or poor signal."

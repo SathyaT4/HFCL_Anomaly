@@ -77,22 +77,22 @@ class PerformanceAnomalyResponse(BaseModel):
     status: str = "success"
     message: str = "Anomaly detection completed."
     total_anomalies_found: int
-    anomaly_report_csv: str = Field(
-        ...,
-        description="Path to the CSV report containing all original fields for anomalous rows, plus anomaly scores."
-    )
-    pca_plot_path: Optional[str] = None
-    timeline_plot_path: Optional[str] = None
+    # anomaly_report_csv: str = Field(
+    #     ...,
+    #     description="Path to the CSV report containing all original fields for anomalous rows, plus anomaly scores."
+    # )
+    # pca_plot_path: Optional[str] = None
+    # timeline_plot_path: Optional[str] = None
     dataset_shape: List[int]
     features_analyzed: List[str]
-    model_trained_now: bool = Field(
-        False,
-        description="True if the model was trained during this API call, False if a pre-existing model was loaded."
-    )
-    training_duration_seconds: Optional[float] = Field(
-        None,
-        description="Time taken to train the model in seconds, if trained during this call."
-    )
+    # model_trained_now: bool = Field(
+    #     False,
+    #     description="True if the model was trained during this API call, False if a pre-existing model was loaded."
+    # )
+    # training_duration_seconds: Optional[float] = Field(
+    #     None,
+    #     description="Time taken to train the model in seconds, if trained during this call."
+    # )
 
 # --- Helper Function for Data Preprocessing (Used in both training and prediction) ---
 def _preprocess_data(df: pd.DataFrame, features: List[str], is_training: bool = False) -> Dict[str, Any]:
@@ -248,10 +248,10 @@ async def detect_performance_anomalies(request: PerformanceAnomalyRequest):
     model = None
     scaler = None
     features_used_for_model = [] # Features the model was trained/will be trained on
-
+    metric_const = 'performance anomalies'
     # Resolve the input file path using the centralized helper
     try:
-        input_file_path = resolve_input_file_path(request.date, request.metric, PERFORMANCE_METRIC_FILE_MAP)
+        input_file_path = resolve_input_file_path(request.date, metric_const, PERFORMANCE_METRIC_FILE_MAP)
     except HTTPException as e:
         raise e # Re-raise HTTPExceptions from the resolver
 
@@ -460,13 +460,13 @@ async def detect_performance_anomalies(request: PerformanceAnomalyRequest):
             status="success",
             message=f"Anomaly detection completed. Model {'trained' if model_trained_now else 'loaded'} and used.",
             total_anomalies_found=anomalies_df.shape[0],
-            anomaly_report_csv=report_csv_path,
-            pca_plot_path=pca_plot_path,
-            timeline_plot_path=timeline_plot_path,
+            # anomaly_report_csv=report_csv_path,
+            # pca_plot_path=pca_plot_path,
+            # timeline_plot_path=timeline_plot_path,
             dataset_shape=list(df_original.shape), # Return shape of original df
             features_analyzed=features_used_for_model,
-            model_trained_now=model_trained_now,
-            training_duration_seconds=training_duration
+            # model_trained_now=model_trained_now,
+            # training_duration_seconds=training_duration
         )
     except FileNotFoundError: # This will be handled by resolve_input_file_path now
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Input data file not found after resolution.")

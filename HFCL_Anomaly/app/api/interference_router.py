@@ -31,13 +31,14 @@ class InterferenceDetectionResponse(BaseModel):
     total_anomalies_found: int
     affected_aps: List[str]
     affected_channels: List[int]
-    interference_report_csv: str
+    # interference_report_csv: str
 
 @router.post("/optimization/detect_interference", response_model=InterferenceDetectionResponse)
 async def detect_interference(request: InterferenceDetectionRequest):
     try:
         # Load data
-        input_file_path = resolve_input_file_path(request.date, request.metric, INTERFERENCE_METRIC_FILE_MAP)
+        metric_const = 'interference report'
+        input_file_path = resolve_input_file_path(request.date, metric_const, INTERFERENCE_METRIC_FILE_MAP)
         df = pd.read_csv(input_file_path)
 
         # Combine all Tx/Rx MCS fields into one total metric
@@ -91,7 +92,7 @@ async def detect_interference(request: InterferenceDetectionRequest):
             total_anomalies_found=len(anomalies_df),
             affected_aps=affected_aps,
             affected_channels=affected_channels,
-            interference_report_csv=report_path
+            # interference_report_csv=report_path
         )
 
     except Exception as e:

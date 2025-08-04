@@ -46,8 +46,8 @@ class ConnectionDropResponse(BaseModel):
     total_ml_anomalies: int
     client_disconnection_counts: Dict[str, int]
     disconnection_events: List[ConnectionDropEventSummary]
-    connection_drops_report_csv: str
-    resolved_input_file: str
+    # connection_drops_report_csv: str
+    # resolved_input_file: str
 
 @router.post("/connection_drops/analyze_drops", response_model=ConnectionDropResponse)
 async def analyze_drops(request: ConnectionDropRequest):
@@ -145,8 +145,8 @@ async def analyze_drops(request: ConnectionDropRequest):
             total_ml_anomalies=0,
             client_disconnection_counts=anomalies_df['Client Mac'].value_counts().to_dict(),
             disconnection_events=events,
-            connection_drops_report_csv=report_path,
-            resolved_input_file=input_file_path
+           # connection_drops_report_csv=report_path,
+           # resolved_input_file=input_file_path
         )
 
     except Exception as e:

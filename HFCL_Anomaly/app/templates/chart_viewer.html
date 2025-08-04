@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Data Visualizer</title>
+    <script src="https://cdn.plot.ly/plotly-2.32.0.min.js" charset="utf-8"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* Holographic Matrix Color Palette */
+            --bg-deep: #05051a;
+            --bg-start: #0a0a26;
+            --bg-end: #0f0f33;
+            --container-bg: rgba(255, 255, 255, 0.05);
+            --container-border: rgba(255, 255, 255, 0.15);
+            --text-primary: #ffffff;
+            --text-secondary: #f0f0f0;
+            --chart-bg: rgba(255, 255, 255, 0.01);
+            --shadow-strong: 0 20px 60px rgba(0, 0, 0, 0.7);
+            --shadow-subtle: 0 8px 30px rgba(0, 0, 0, 0.4);
+            --glow-cyan: #00ffff;
+            --glow-magenta: #ff00ff;
+            --accent-green: #2ecc71;
+            --container-glow-start: rgba(0, 255, 255, 0.2);
+            --container-glow-end: rgba(255, 0, 255, 0.2);
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, var(--bg-deep) 0%, var(--bg-end) 100%);
+            color: var(--text-primary);
+            overflow-y: auto;
+            overflow-x: hidden;
+            position: relative;
+        }
+        
+        /* Layered, animated background grids */
+        body::before, body::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            opacity: 0.1;
+        }
+        
+        body::before {
+            background-image: linear-gradient(to right, var(--glow-cyan) 1px, transparent 1px),
+                              linear-gradient(to bottom, var(--glow-cyan) 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: grid-move 30s linear infinite;
+        }
+
+        body::after {
+            background-image: linear-gradient(to right, var(--glow-magenta) 1px, transparent 1px),
+                              linear-gradient(to bottom, var(--glow-magenta) 1px, transparent 1px);
+            background-size: 60px 60px;
+            animation: grid-move-slow 40s linear infinite reverse;
+        }
+
+        @keyframes grid-move {
+            from { background-position: 0 0; }
+            to { background-position: 50px 50px; }
+        }
+
+        @keyframes grid-move-slow {
+            from { background-position: 0 0; }
+            to { background-position: 60px 60px; }
+        }
+
+        /* Dashboard container with animated border glow */
+        .dashboard-container {
+            width: 90vw;
+            max-width: 1200px;
+            height: 95vh;
+            background: var(--container-bg);
+            backdrop-filter: blur(25px) brightness(1.1);
+            -webkit-backdrop-filter: blur(25px) brightness(1.1);
+            border-radius: 25px;
+            border: 2px solid var(--container-border);
+            box-shadow: var(--shadow-strong);
+            padding: 4vmin;
+            display: flex;
+            flex-direction: column;
+            opacity: 0;
+            transform: scale(0.9);
+            transition: all 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            position: relative;
+            z-index: 10;
+        }
+        
+        /* Loading animation for the main container */
+        .dashboard-container.loaded {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        /* Animated border glow effect on load */
+        .dashboard-container::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            border-radius: 27px;
+            background: linear-gradient(45deg, var(--glow-cyan), var(--glow-magenta), var(--glow-cyan));
+            background-size: 300% 300%;
+            z-index: -1;
+            opacity: 0;
+            filter: blur(8px);
+            transition: opacity 1s ease-in-out;
+            animation: border-glow 12s ease-in-out infinite alternate;
+        }
+
+        .dashboard-container.loaded::before {
+            opacity: 0.5;
+        }
+
+        @keyframes border-glow {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 100% 50%; }
+        }
+
+        /* Header and text styles */
+        .info-container {
+            text-align: center;
+            padding-bottom: 2vmin;
+            border-bottom: 1px solid var(--container-border);
+            margin-bottom: 2vmin;
+            transition: all 0.8s ease;
+        }
+
+        .info-container h1 {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            line-height: 1.2;
+            margin: 0;
+            background-image: linear-gradient(90deg, var(--glow-cyan), var(--glow-magenta));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: text-glitch 12s infinite linear alternate-reverse;
+        }
+        
+        .info-container p {
+            font-family: 'Roboto Mono', monospace;
+            font-size: clamp(0.8rem, 2vw, 1.2rem);
+            color: var(--text-secondary);
+            margin-top: 0.5rem;
+            letter-spacing: 0.05em;
+            text-shadow: 0 0 5px rgba(255, 255, 255, 0.1);
+        }
+
+        /* Chart container with dynamic loading and hover effects */
+        #chart-container {
+            width: 100%;
+            height: 100%;
+            border-radius: 20px;
+            overflow: hidden;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 1.2s ease 0.8s;
+            flex-grow: 1;
+            box-shadow: var(--shadow-subtle);
+        }
+
+        #chart-container.loaded {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        /* Plotly-specific styling for the modebar */
+        .plotly .modebar {
+            background: rgba(0,0,0,0.6) !important;
+            border: 1px solid rgba(255, 255, 255, 0.2) !important;
+            border-radius: 10px !important;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+        .plotly .modebar-btn {
+            color: var(--text-primary) !important;
+        }
+
+        .plotly .modebar-btn:hover {
+            color: var(--glow-cyan) !important;
+            background: rgba(0, 255, 255, 0.1) !important;
+            transform: scale(1.1);
+        }
+        
+        /* Keyframe animations */
+        @keyframes text-glitch {
+            0% { text-shadow: 0 0 1px var(--glow-cyan); }
+            5% { text-shadow: 1px 1px 1px var(--glow-cyan), -1px -1px 1px var(--glow-magenta); }
+            10% { text-shadow: 0 0 1px var(--glow-cyan); }
+            10.5% { text-shadow: 2px 2px 1px var(--glow-cyan), -2px -2px 1px var(--glow-magenta); }
+            11% { text-shadow: 0 0 1px var(--glow-cyan); }
+            12% { text-shadow: 0 0 1px var(--glow-cyan); }
+            100% { text-shadow: 0 0 1px var(--glow-cyan); }
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container" id="dashboard-container">
+        <div class="info-container">
+            <h1 id="chart-title"></h1>
+            <p id="chart-subtitle"></p>
+        </div>
+        <div id="chart-container"></div>
+    </div>
+
+    <script>
+        const rootStyles = getComputedStyle(document.documentElement);
+        const textPrimaryColor = rootStyles.getPropertyValue('--text-primary').trim();
+        const textSecondaryColor = rootStyles.getPropertyValue('--text-secondary').trim();
+        const bgDeepColor = rootStyles.getPropertyValue('--bg-deep').trim();
+        
+        // This variable is populated by the server-side rendering with the chart data.
+        const chartDefinition = {{ chart_definition | safe }};
+
+        // Dynamically populate the title and subtitle from the payload
+        if (chartDefinition) {
+            const titleElement = document.getElementById('chart-title');
+            const subtitleElement = document.getElementById('chart-subtitle');
+
+            // Use the title from the Plotly layout object
+            if (chartDefinition.layout && chartDefinition.layout.title && chartDefinition.layout.title.text) {
+                // Remove HTML tags for clean display in the h1
+                const tempDiv = document.createElement('div');
+                tempDiv.innerHTML = chartDefinition.layout.title.text;
+                titleElement.textContent = tempDiv.textContent || 'Advanced Data Visualizer';
+            } else {
+                titleElement.textContent = 'Advanced Data Visualizer';
+            }
+
+            // Assume a 'subtitle' or 'description' field exists in your payload
+            if (chartDefinition.description) {
+                subtitleElement.textContent = chartDefinition.description;
+            } else {
+                subtitleElement.textContent = 'Analysis of Real-time Anomaly Detection';
+            }
+        }
+
+        // Main function to render the chart
+        function renderChart() {
+            if (!chartDefinition) {
+                console.error('Chart definition is missing or invalid.');
+                return;
+            }
+
+            // Apply high-standard styling to the chart data and layout
+            const dataWithStyles = applyHighStandardStyles(chartDefinition.data);
+            const layoutWithStyles = applyHighStandardLayout(chartDefinition.layout);
+
+            // Plot the chart
+            Plotly.newPlot('chart-container', dataWithStyles, layoutWithStyles, {
+                responsive: true,
+                displayModeBar: true,
+                modeBarButtonsToRemove: ['resetcamera', 'zoom3d', 'pan3d', 'orbitrotation', 'tableRotation']
+            }).then(function() {
+                // Add the 'loaded' class to trigger CSS animations
+                const dashboardContainer = document.getElementById('dashboard-container');
+                const chartDiv = document.getElementById('chart-container');
+                dashboardContainer.classList.add('loaded');
+                chartDiv.classList.add('loaded');
+            });
+        }
+        
+        // Function to apply enhanced styles to traces (data)
+        function applyHighStandardStyles(data) {
+            return data.map((trace, index) => {
+                const baseTrace = { ...trace };
+                
+                // Add special styling for certain chart types
+                if (['scatter', 'scattergl', 'line'].includes(baseTrace.type)) {
+                    baseTrace.mode = 'lines+markers';
+                    baseTrace.line = {
+                        width: 3,
+                        smoothing: 1.3
+                    };
+                    baseTrace.marker = {
+                        size: 8,
+                        symbol: 'circle',
+                        line: { width: 2, color: 'white' },
+                        opacity: 0.8,
+                        showscale: false
+                    };
+                }
+                
+                // 3D-specific trace styles
+                if (['scatter3d', 'mesh3d'].includes(baseTrace.type)) {
+                    baseTrace.marker = {
+                        size: 5,
+                        color: baseTrace.z,
+                        colorscale: 'Electric',
+                        opacity: 0.8
+                    };
+                    baseTrace.line = {
+                        width: 2,
+                        color: 'rgba(255, 255, 255, 0.5)'
+                    };
+                }
+
+                return baseTrace;
+            });
+        }
+
+        // Function to apply enhanced layout styles
+        function applyHighStandardLayout(layout) {
+            const highStandardLayout = {
+                ...layout,
+                paper_bgcolor: 'transparent',
+                plot_bgcolor: 'transparent',
+                font: {
+                    family: 'Roboto Mono, monospace',
+                    color: textPrimaryColor,
+                    size: 14
+                },
+                title: null, // We display the title outside the chart
+                xaxis: {
+                    ...layout.xaxis,
+                    gridcolor: 'rgba(255, 255, 255, 0.08)',
+                    linecolor: 'rgba(255, 255, 255, 0.15)',
+                    zerolinecolor: 'rgba(255, 255, 255, 0.1)',
+                    tickfont: { color: textSecondaryColor, size: 12 },
+                    title_font: { color: textSecondaryColor, size: 14 }
+                },
+                yaxis: {
+                    ...layout.yaxis,
+                    gridcolor: 'rgba(255, 255, 255, 0.08)',
+                    linecolor: 'rgba(255, 255, 255, 0.15)',
+                    zerolinecolor: 'rgba(255, 255, 255, 0.1)',
+                    tickfont: { color: textSecondaryColor, size: 12 },
+                    title_font: { color: textSecondaryColor, size: 14 }
+                },
+                scene: {
+                    ...layout.scene,
+                    xaxis: { ...layout.scene?.xaxis, backgroundcolor: bgDeepColor, gridcolor: 'rgba(255,255,255,0.1)' },
+                    yaxis: { ...layout.scene?.yaxis, backgroundcolor: bgDeepColor, gridcolor: 'rgba(255,255,255,0.1)' },
+                    zaxis: { ...layout.scene?.zaxis, backgroundcolor: bgDeepColor, gridcolor: 'rgba(255,255,255,0.1)' },
+                    bgcolor: 'transparent',
+                    aspectmode: 'cube',
+                    camera: { eye: { x: 1.25, y: 1.25, z: 1.25 } }
+                },
+                margin: { t: 20, b: 60, l: 80, r: 40 },
+                hovermode: 'closest',
+                height: null,
+                width: null,
+                legend: {
+                    ...layout.legend,
+                    yanchor: "top", y: 1.15, xanchor: "left", x: 0, orientation: "h",
+                    bgcolor: 'rgba(255, 255, 255, 0.05)', bordercolor: 'rgba(255, 255, 255, 0.1)',
+                    font: { family: 'Roboto Mono, monospace', color: textSecondaryColor, size: 12 }
+                },
+                hoverlabel: {
+                    bgcolor: 'rgba(255,255,255,0.8)',
+                    bordercolor: 'rgba(0, 0, 0, 0.2)',
+                    font: { color: bgDeepColor, family: 'Roboto Mono, monospace', size: 14 }
+                }
+            };
+            return highStandardLayout;
+        }
+
+        // Call the render function once the page is ready
+        document.addEventListener('DOMContentLoaded', renderChart);
+    </script>
+</body>
+</html>

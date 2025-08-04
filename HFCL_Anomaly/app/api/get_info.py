@@ -37,7 +37,7 @@ class StoredDataQueryPayload(BaseModel):
     metric_name: Literal["ap clients 5 min daily"] = Field(..., description="The specific metric/report to fetch.")
     metrics: List[str] = Field(default_factory=list, description="List of metric names (column names) to retrieve. Required if 'return_type' is 'records'.")
     filters: Optional[Dict[str, FilterCondition]] = Field(default_factory=dict, description="Dictionary of filters to apply (column_name: FilterCondition).")
-    aggregate: Optional[Dict[str, List[str]]] = Field(default_factory=dict, description="Dictionary of aggregations to perform (e.g., {'count': ['*'], 'avg': ['rssi_strength']}).")
+    aggregate: Optional[Dict[str, List[str]]] = Field(default_factory=dict, description="Dictionary of aggregations to perform (e.g., {'count': ['*'], 'avg': ['rssi']}).")
     return_type: Optional[Literal["records", "count_only", "aggregated_values"]] = Field("records", description="Type of data to return: 'records', 'count_only', 'aggregated_values'.")
 
 
@@ -65,7 +65,7 @@ def standardize_dataframe(df: pd.DataFrame) -> pd.DataFrame:
     df.rename(columns={
         'AP Name': 'ap_name', 'Client Mac': 'client_mac', 'Channel': 'channel',
         'Timestamp': 'timestamp', 'Host Name': 'host_name', 'Device Type': 'device_type',
-        'Device OS': 'device_os', 'RSSI Strength': 'rssi_strength', 'SNR': 'snr',
+        'Device OS': 'device_os', 'RSSI Strength': 'rssi', 'SNR': 'snr',
         'Client IPv4': 'client_ipv4', 'Client IPv6': 'client_ipv6', 'Site Name': 'site_name',
         'Site Location': 'site_location', 'Site Description': 'site_description',
         'AP Description': 'ap_description', 'Device IPv4': 'device_ipv4',
@@ -81,7 +81,7 @@ def standardize_dataframe(df: pd.DataFrame) -> pd.DataFrame:
     df.columns = [col.replace(' ', '_').replace('.', '').lower() for col in df.columns]
 
     numeric_cols = [
-        'rssi_strength', 'snr', 'data_uploaded_mb', 'data_downloaded_mb'
+        'rssi', 'snr', 'data_uploaded_mb', 'data_downloaded_mb'
     ]
     for col in numeric_cols:
         if col in df.columns:

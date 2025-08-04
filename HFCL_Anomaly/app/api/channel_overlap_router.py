@@ -88,14 +88,14 @@ class ChannelOptimizationResponse(BaseModel):
     total_rule_based_overlaps: int
     total_ml_anomalies: int
     channel_issues: List[ChannelIssueSummary]
-    channel_optimization_report_csv: str = Field(
-        ...,
-        description="Path to the CSV report containing detailed channel issue findings."
-    )
-    resolved_input_file: str = Field(
-        ...,
-        description="The actual file path used for analysis."
-    )
+    # channel_optimization_report_csv: str = Field(
+    #     ...,
+    #     description="Path to the CSV report containing detailed channel issue findings."
+    # )
+    # resolved_input_file: str = Field(
+    #     ...,
+    #     description="The actual file path used for analysis."
+    # )
 
 @router.post("/channel_optimization/analyze_channels", response_model=ChannelOptimizationResponse)
 async def analyze_channels(request: ChannelOptimizationRequest):
@@ -104,8 +104,9 @@ async def analyze_channels(request: ChannelOptimizationRequest):
     and identifies anomalous channel performance using an ML model (Isolation Forest).
     """
     try:
+        metric_const = 'channel overlap report'
         # Resolve the input file path using the centralized helper
-        input_file_path = resolve_input_file_path(request.date, request.metric, CONNECTION_DROP_METRIC_FILE_MAP)
+        input_file_path = resolve_input_file_path(request.date, metric_const, CONNECTION_DROP_METRIC_FILE_MAP)
         
         df = pd.read_csv(input_file_path)
 
@@ -296,8 +297,8 @@ async def analyze_channels(request: ChannelOptimizationRequest):
             total_rule_based_overlaps=total_rule_based_overlaps,
             total_ml_anomalies=total_ml_anomalies,
             channel_issues=channel_issues,
-            channel_optimization_report_csv=report_csv_path,
-            resolved_input_file=input_file_path
+            # channel_optimization_report_csv=report_csv_path,
+            # resolved_input_file=input_file_path
         )
     except FileNotFoundError:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Input data file not found after resolution.")

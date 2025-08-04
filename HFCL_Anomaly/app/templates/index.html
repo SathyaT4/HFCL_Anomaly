@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pop-up Chart Link</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            padding: 2rem;
+            text-align: center;
+        }
+        #chartLink {
+            font-size: 1.2em;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Generated Chart Link</h1>
+    
+    <a href="#" id="chartLink" data-chart-url="/mcp/model_management/chart_viewer/b34f6587-9552-4497-b3a1-207a9308b071">
+        Click here to view your chart
+    </a>
+
+    <script>
+        // Get the link element from the page
+        const chartLink = document.getElementById('chartLink');
+
+        // Add a click event listener
+        chartLink.addEventListener('click', function(event) {
+            // Prevent the default link behavior
+            event.preventDefault();
+
+            // Get the relative URL from the data attribute
+            const relativeUrl = this.getAttribute('data-chart-url');
+
+            // Construct the full URL
+            const fullUrl = `http://localhost:3000${relativeUrl}`;
+
+            // Calculate 25% of the screen dimensions
+            const popupWidth = window.screen.width * 0.25;
+            const popupHeight = window.screen.height * 0.25;
+            
+            // Calculate position for the bottom-right corner
+            const popupLeft = window.screen.width - popupWidth;
+            const popupTop = window.screen.height - popupHeight;
+            
+            // Construct the window features string
+            const windowFeatures = `
+                width=${popupWidth},
+                height=${popupHeight},
+                left=${popupLeft},
+                top=${popupTop},
+                scrollbars=yes,
+                resizable=yes
+            `;
+            
+            // Open the new window with the specified URL and features
+            window.open(fullUrl, 'ChartViewer', windowFeatures);
+        });
+    </script>
+
+</body>
+</html>
